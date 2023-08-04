@@ -15,8 +15,9 @@ defmodule ElixirRuntime.MixProject do
       elixir: "~> 1.15",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
-      deps: deps(),
-      aliases: [test: "test --no-start"]
+      aliases: aliases(),
+      elixirc_options: [debug_info: Mix.env() == :dev or Mix.env() == :test],
+      deps: deps()
     ]
   end
 
@@ -24,7 +25,7 @@ defmodule ElixirRuntime.MixProject do
   def application do
     [
       mod: {ElixirRuntime.Application, []},
-      extra_applications: [:logger, :inets, :ssl]
+      extra_applications: [:logger, :runtime_tools, :inets, :ssl]
     ]
   end
 
@@ -44,5 +45,14 @@ defmodule ElixirRuntime.MixProject do
 
   defp elixirc_paths(_) do
     ["lib"]
+  end
+
+   # Aliases are shortcuts or tasks specific to the current project.
+  #
+  # See the documentation for `Mix` for more info on aliases.
+  defp aliases do
+    [
+      test: "test --no-start"
+    ]
   end
 end
