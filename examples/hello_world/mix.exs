@@ -36,7 +36,7 @@ defmodule HelloWorld.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:elixir_runtime, in_umbrella: true},
+      {:elixir_runtime, path: "../../apps/elixir_runtime"}
     ]
   end
 end
