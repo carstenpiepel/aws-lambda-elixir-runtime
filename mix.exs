@@ -1,53 +1,54 @@
-defmodule AwsLambdaElixirRuntime.MixProject do
+# Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+
+defmodule ElixirRuntime.MixProject do
   use Mix.Project
 
   def project do
     [
-      apps_path: "apps",
+      app: :elixir_runtime,
       version: "0.2.0",
+      elixir: "~> 1.15",
+      elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps(),
-
-      # Docs
-      name: "AWS Lambda Elixir Runtime",
-      source_url: "https://github.com/aws-samples/aws-lambda-elixir-runtime",
-      homepage_url:
-        "https://github.com/aws-samples/aws-lambda-elixir-runtime/tree/master/apps/elixir_runtime",
-      docs: [
-        source_url_pattern:
-          "https://github.com/aws-samples/aws-lambda-elixir-runtime/blob/master/apps/elixir_runtime/%{path}#L%{line}",
-        main: "readme",
-        extras: [
-          "README.md",
-          "LICENSE.md"
-        ]
-      ]
+      elixirc_options: [debug_info: Mix.env() == :dev or Mix.env() == :test],
+      deps: deps()
     ]
   end
 
-  # Dependencies listed here are available only for this
-  # project and cannot be accessed from applications inside
-  # the apps folder.
-  #
-  # Run "mix help deps" for examples and options.
-  defp deps do
-    []
+  # Run "mix help compile.app" to learn about applications.
+  def application do
+    [
+      mod: {ElixirRuntime.Application, []},
+      extra_applications: [:logger, :runtime_tools, :inets, :ssl]
+    ]
   end
 
-  # Aliases are shortcuts or tasks specific to the current project.
-  # For example, to install project dependencies and perform other setup tasks, run:
-  #
-  #     $ mix setup
+  # Run "mix help deps" to learn about dependencies.
+  defp deps do
+    [
+      {:jason, "~> 1.4"},
+      {:mox, "~> 1.0", only: :test},
+      {:ex_doc, "~> 0.27", only: :dev, runtime: false},
+      {:castore, "~> 1.0", only: [:dev, :test]}
+    ]
+  end
+
+  defp elixirc_paths(:test) do
+    ["lib", "test/support"]
+  end
+
+  defp elixirc_paths(_) do
+    ["lib"]
+  end
+
+   # Aliases are shortcuts or tasks specific to the current project.
   #
   # See the documentation for `Mix` for more info on aliases.
-  #
-  # Aliases listed here are available only for this project
-  # and cannot be accessed from applications inside the apps/ folder.
   defp aliases do
     [
-      # run `mix setup` in all child apps
-      setup: ["cmd mix setup"]
+      test: "test --no-start"
     ]
   end
 end
