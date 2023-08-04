@@ -10,7 +10,7 @@ of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:aws_lambda_elixir_runtime, "~> 0.1.0"}
+    {:aws_lambda_elixir_runtime, "~> 0.2.0"}
   ]
 end
 ```
@@ -30,16 +30,14 @@ First, create a new mix project in a fresh directory:
 > mix new --app hello_world ./hello_world
 ```
 
-Now declare a dependency on `:aws_lambda_elixir_runtime` and
-`:distillery`, which is used to package the OTP release.
+Now declare a dependency on `:aws_lambda_elixir_runtime`.
 
 Edit `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:aws_lambda_elixir_runtime, "~> 0.1.0"},
-    {:distillery, "~> 2.0"}
+    {:aws_lambda_elixir_runtime, "~> 0.2.0"}
   ]
 end
 ```
@@ -66,7 +64,7 @@ to read:
 ```elixir
 defmodule HelloWorld do
 
-  def my_hello_world_handler(request, context)
+  def hello_world(request, context)
       when is_map(request) and is_map(context) do
     """
     Hello World!
@@ -103,7 +101,7 @@ cli. Using the CLI would look like the following:
 > aws lambda create-function \
     --region $AWS_REGION \
     --function-name HelloWorld \
-    --handler Elixir.HelloWorld:my_hello_world_handler \
+    --handler Elixir.HelloWorld:hello_world \
     --role $ROLE_ARN \
     --runtime provided \
     --zip-file fileb://./lambda.zip
@@ -116,7 +114,7 @@ Invoking from the CLI would look like this:
 > aws lambda invoke \
     --function-name HelloWorld \
     --region $AWS_REGION \
-    --lag-type TAIL \
+    --log-type Tail \
     --payload '{"msg": "a fake request"}' \
     outputfile.txt
 ...

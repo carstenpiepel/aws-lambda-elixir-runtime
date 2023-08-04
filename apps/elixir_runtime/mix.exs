@@ -1,33 +1,22 @@
 # Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: MIT-0
 
-defmodule Lambda.MixProject do
+defmodule ElixirRuntime.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :aws_lambda_elixir_runtime,
+      app: :elixir_runtime,
       version: "0.2.0",
+      build_path: "../../_build",
+      config_path: "../../config/config.exs",
+      deps_path: "../../deps",
+      lockfile: "../../mix.lock",
       elixir: "~> 1.15",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      aliases: [test: "test --no-start"],
-
-      # Docs
-      name: "AWS Lambda Elixir Runtime",
-      source_url: "https://github.com/aws-samples/aws-lambda-elixir-runtime",
-      homepage_url:
-        "https://github.com/aws-samples/aws-lambda-elixir-runtime/tree/master/elixir_runtime",
-      docs: [
-        source_url_pattern:
-          "https://github.com/aws-samples/aws-lambda-elixir-runtime/blob/master/elixir_runtime/%{path}#L%{line}",
-        main: "readme",
-        extras: [
-          "README.md",
-          "LICENSE.md"
-        ]
-      ]
+      aliases: [test: "test --no-start"]
     ]
   end
 

@@ -8,16 +8,19 @@ defmodule HelloWorld.MixProject do
     [
       app: :hello_world,
       version: "0.2.0",
+      build_path: "../../_build",
+      config_path: "../../config/config.exs",
+      deps_path: "../../deps",
+      lockfile: "../../mix.lock",
       elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       releases: [
         hello_world: [
           version: "0.2.0",
-          applications: [hello_world: :permanent, aws_lambda_elixir_runtime: :permanent],
+          applications: [hello_world: :permanent, elixir_runtime: :permanent],
           include_erts: true,
-          include_executables_for: [:unix],
-
+          include_executables_for: [:unix]
         ]
       ]
     ]
@@ -33,7 +36,7 @@ defmodule HelloWorld.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:aws_lambda_elixir_runtime, path: "../../elixir_runtime"}
+      {:elixir_runtime, in_umbrella: true},
     ]
   end
 end
