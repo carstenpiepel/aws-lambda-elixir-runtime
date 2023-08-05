@@ -6,3 +6,6 @@
 
 ## Tweak GC to run more often
 ##-env ERL_FULLSWEEP_AFTER 10
+
+## Limit the amount of heap space allocated to the Erlang VM to 256 MB
+##+MMscs 256 +Musac false +MMsco true
