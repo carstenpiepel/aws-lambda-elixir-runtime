@@ -56,10 +56,13 @@ defmodule ElixirRuntime.Application.Test do
   end
 
   test "a missing handler string" do
-    start_with_invocations([Support.FakeInvoke.with_message("not used")])
+    invocation = Support.FakeInvoke.with_message("not used")
+    expected_id = Support.FakeInvoke.id(invocation)
 
-    assert_receive {:init_error, msg}, 500
-    assert String.contains?(msg, "RuntimeElixir.FunctionClauseError")
+    start_with_invocations([invocation])
+
+    assert_receive {:next, ^invocation}
+    assert_receive {:complete, ^expected_id, "\"no handler configured\""}
   end
 
   test "a malformed handler string" do

@@ -36,8 +36,7 @@ defmodule ElixirRuntime.Loop.Handler do
       %ElixirRuntime.Loop.Handler{module: Elixir.Example, function: :handle}
   """
   def configured do
-    [module, function] = handler_string() |> String.split(":", trim: true)
-    new(String.to_atom(module), String.to_atom(function))
+    get_handler(handler_string())
   end
 
   @doc """
@@ -45,7 +44,7 @@ defmodule ElixirRuntime.Loop.Handler do
   ## Examples
 
   Create a handler for String.trim and invoke it to get a result.
-      iex> defmodule Example, do: def func(body, _context), do: body
+      iex> defmodule Example, do: (def func(body, _context), do: body)
       iex> handler = ElixirRuntime.Loop.Handler.new(Example, :func)
       iex> handler |> ElixirRuntime.Loop.Handler.invoke(%{msg: "hello"}, %{})
       %{msg: "hello"}
@@ -54,6 +53,16 @@ defmodule ElixirRuntime.Loop.Handler do
       when is_map(body) and is_map(context) do
     Logger.info("invoke #{module}.#{function}(#{Kernel.inspect(body)})")
     Kernel.apply(module, function, [body, context])
+  end
+
+  defp get_handler(handler_string) when is_nil(handler_string) do
+    Logger.warning("using no-op handler")
+    new(String.to_atom("Elixir.ElixirRuntime.Loop.NoOpHandler"), :do_nothing)
+  end
+
+  defp get_handler(handler_string) do
+    [module, function] = String.split(handler_string, ":", trim: true)
+    new(String.to_atom(module), String.to_atom(function))
   end
 
   defp handler_string do
